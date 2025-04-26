@@ -7,7 +7,7 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
-import { Product, products } from "@/data/products";
+import { Product } from "@/data/products";
 
 export interface CartItem extends Product {
   quantity: number;
@@ -15,6 +15,7 @@ export interface CartItem extends Product {
 
 // Type predicate function to check if an object is a CartItem
 // We accept 'any' here because we are validating unknown data from localStorage
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const isCartItem = (item: any): item is CartItem => {
   return (
     typeof item === "object" &&

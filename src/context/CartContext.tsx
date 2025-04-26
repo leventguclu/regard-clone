@@ -13,19 +13,25 @@ export interface CartItem extends Product {
   quantity: number;
 }
 
-// Type predicate function to check if an object is a CartItem
-// We accept 'any' here because we are validating unknown data from localStorage
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const isCartItem = (item: any): item is CartItem => {
+// Type predicate function refactored with 'unknown' and safer checks
+const isCartItem = (item: unknown): item is CartItem => {
+  // Check if it's a non-null object first
+  if (typeof item !== "object" || item === null) {
+    return false;
+  }
+  // Now, safely check for properties using 'in' operator and typeof
   return (
-    typeof item === "object" &&
-    item !== null &&
-    typeof item.id === "number" && // Check type for robustness
-    typeof item.name === "string" &&
-    typeof item.price === "number" &&
-    typeof item.imageUrl === "string" &&
-    typeof item.quantity === "number" &&
-    item.quantity >= 0
+    "id" in item &&
+    typeof (item as { id: unknown }).id === "number" &&
+    "name" in item &&
+    typeof (item as { name: unknown }).name === "string" &&
+    "price" in item &&
+    typeof (item as { price: unknown }).price === "number" &&
+    "imageUrl" in item &&
+    typeof (item as { imageUrl: unknown }).imageUrl === "string" &&
+    "quantity" in item &&
+    typeof (item as { quantity: unknown }).quantity === "number" &&
+    (item as { quantity: number }).quantity >= 0
   );
 };
 
@@ -49,7 +55,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       try {
         const parsedCart = JSON.parse(storedCart);
         if (Array.isArray(parsedCart)) {
-          // Use the type predicate in the filter
+          // Use the refactored type predicate
           const validCart = parsedCart.filter(isCartItem);
           setCartItems(validCart);
         }

@@ -7,11 +7,26 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
-import { Product } from "@/data/products";
+import { Product, products } from "@/data/products";
 
 export interface CartItem extends Product {
   quantity: number;
 }
+
+// Type predicate function to check if an object is a CartItem
+// We accept 'any' here because we are validating unknown data from localStorage
+const isCartItem = (item: any): item is CartItem => {
+  return (
+    typeof item === "object" &&
+    item !== null &&
+    typeof item.id === "number" && // Check type for robustness
+    typeof item.name === "string" &&
+    typeof item.price === "number" &&
+    typeof item.imageUrl === "string" &&
+    typeof item.quantity === "number" &&
+    item.quantity >= 0
+  );
+};
 
 interface CartContextType {
   cartItems: CartItem[];
@@ -33,15 +48,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       try {
         const parsedCart = JSON.parse(storedCart);
         if (Array.isArray(parsedCart)) {
-          // Basic validation: check if items have expected properties
-          const validCart = parsedCart.filter(
-            (item: any) =>
-              item.id &&
-              item.name &&
-              item.price &&
-              item.imageUrl &&
-              item.quantity
-          );
+          // Use the type predicate in the filter
+          const validCart = parsedCart.filter(isCartItem);
           setCartItems(validCart);
         }
       } catch (error) {

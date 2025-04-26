@@ -67,4 +67,28 @@ export const products: Product[] = [
     imageUrl:
       "https://via.placeholder.com/300x400/4682B4/FFFFFF?text=Denim+Jacket",
   },
+  {
+    id: 11,
+    name: "Grey Oxford Shirt",
+    price: 50,
+    imageUrl: "/hoodie1.jpg",
+  },
+  {
+    id: 12,
+    name: "Light Blue Striped Shirt",
+    price: 40,
+    imageUrl: "/polo1.jpg",
+  },
+  {
+    id: 13,
+    name: "White Linen Camp Shirt",
+    price: 55,
+    imageUrl: "/tshirt1.jpg",
+  },
+  {
+    id: 14,
+    name: "Classic Black T-Shirt",
+    price: 20,
+    imageUrl: "/tshirt1_black.jpg",
+  },
 ];

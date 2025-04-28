@@ -12,6 +12,7 @@ function TryOnContent() {
   const [clothingImageUrl, setClothingImageUrl] = useState<string | null>(null);
   const [selectedModel, setSelectedModel] = useState<Model | null>(null);
   const [showModelSelector, setShowModelSelector] = useState<boolean>(false);
+  const [iframeSrc, SetIframeSrc] = useState<string | null>(null);
 
   // Set initial clothing image URL from query params
   useEffect(() => {
@@ -23,13 +24,23 @@ function TryOnContent() {
   const handleSelectModel = (model: Model) => {
     setSelectedModel(model);
     setShowModelSelector(false); // Close selector after selection
+    SetIframeSrc(null);
   };
 
   const handleRun = () => {
-    // Placeholder action for the Run button
-    console.log("Run button clicked!");
-    alert("Run process initiated (placeholder)!");
-    // Later, this will trigger the iframe content generation
+    if (selectedModel && clothingImageUrl) {
+      // Construct the URL for the iframe.
+      // NOTE: Replace '/tryon-iframe-content' with the actual path
+      // to your iframe page that processes these parameters.
+      const targetUrl = `/tryon-iframe-content?modelId=${
+        selectedModel.id
+      }&imageUrl=${encodeURIComponent(clothingImageUrl)}`;
+      console.log("Setting iframe src:", targetUrl);
+      SetIframeSrc(targetUrl); // Update the iframe source state
+    } else {
+      // This should ideally not happen if the button is disabled correctly
+      alert("Please select both a clothing item and a model first.");
+    }
   };
 
   return (
@@ -117,19 +128,36 @@ function TryOnContent() {
         {/* Centering container */}
         <button
           onClick={handleRun}
-          className="bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700 transition-colors text-lg font-semibold shadow"
+          disabled={!selectedModel || !clothingImageUrl} // <-- Disable button if selection is incomplete
+          className={`bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700 transition-colors text-lg font-semibold shadow ${
+            !selectedModel || !clothingImageUrl
+              ? "opacity-50 cursor-not-allowed"
+              : "" // <-- Add disabled styles
+          }`}
         >
           Run
         </button>
       </div>
 
-      {/* Result Section (Placeholder) */}
+      {/* Result Section (Updated with iframe) */}
       <div className="border p-4 rounded-lg shadow mt-6">
         <h2 className="text-xl font-semibold mb-4 text-center">Result</h2>
-        <div className="bg-gray-100 h-96 flex items-center justify-center rounded">
-          <p className="text-gray-500">
-            (iFrame with combined result will go here)
-          </p>
+        {/* Adjust height as needed */}
+        <div className="bg-gray-100 h-[700px] flex items-center justify-center rounded">
+          {iframeSrc ? (
+            <iframe
+              src={iframeSrc}
+              title="Virtual Try-On Result"
+              width="100%"
+              height="100%"
+              frameBorder="0"
+              allowFullScreen // Optional: allow fullscreen
+            ></iframe>
+          ) : (
+            <p className="text-gray-500">
+              Select a model and clothing, then click "Run" to see the result.
+            </p>
+          )}
         </div>
       </div>
     </div>

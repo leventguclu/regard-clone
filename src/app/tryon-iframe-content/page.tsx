@@ -3,7 +3,7 @@
 import React, { Suspense } from "react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
-import { models, Model } from "@/data/models"; // Assuming models data is accessible here
+import { models } from "@/data/models"; // Assuming models data is accessible here
 
 function IframeContent() {
   const searchParams = useSearchParams();

@@ -155,7 +155,8 @@ function TryOnContent() {
             ></iframe>
           ) : (
             <p className="text-gray-500">
-              Select a model and clothing, then click "Run" to see the result.
+              Select a model and clothing, then click &quot;Run&quot; to see the
+              result.
             </p>
           )}
         </div>
